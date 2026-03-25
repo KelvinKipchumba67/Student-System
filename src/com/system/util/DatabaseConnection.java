@@ -1,35 +1,40 @@
 package com.system.util;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class DatabaseConnection {
+    private static Connection connection = null;
 
-    // 1. Database Credentials
-    // Candid note: I kept the spelling "StudentSytem_db" exactly as you wrote it in your SQL script!
-    private static final String URL = "jdbc:mysql://localhost:3306/StudentSytem_db";
-
-    // Change these if your MySQL setup uses a different username or password
-    private static final String USER = "root";
-    private static final String PASSWORD = "@kelvin";
-
-    // 2. The method to grab the connection
     public static Connection getConnection() {
-        Connection connection = null;
-        try {
-            // Step A: Load the "Translator" (The MySQL Driver)
-            Class.forName("com.mysql.cj.jdbc.Driver");
+        if (connection == null) {
+            try {
+                // 1. Load the properties file
+                Properties props = new Properties();
+                FileInputStream in = new FileInputStream("database.properties");
+                props.load(in);
+                in.close();
 
-            // Step B: Actually connect to the database
-            connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            System.out.println("Success: Connected to the database");
+                // 2. Fetch the credentials securely
+                String url = props.getProperty("db.url");
+                String user = props.getProperty("db.username");
+                String pass = props.getProperty("db.password");
 
-        } catch (ClassNotFoundException e) {
-            System.out.println("Critical Error: MySQL Driver not found. We need to add the .jar file to IntelliJ.");
-        } catch (SQLException e) {
-            System.out.println("Critical Error: Could not connect. Is your MySQL server (Workbench) currently running?");
-            e.printStackTrace();
+                // 3. Make the connection
+                connection = DriverManager.getConnection(url, user, pass);
+                System.out.println("Database Connected Successfully");
+
+            } catch (IOException e) {
+                System.out.println("CRITICAL ERROR: Could not find database.properties file.");
+                e.printStackTrace();
+            } catch (SQLException e) {
+                System.out.println("CRITICAL ERROR: Database connection failed. Check your credentials.");
+                e.printStackTrace();
+            }
         }
         return connection;
     }
