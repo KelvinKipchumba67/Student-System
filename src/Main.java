@@ -1,17 +1,22 @@
-import com.system.util.DatabaseConnection;
-import java.sql.Connection;
+package com.system;
+
+import com.system.view.MainDashboard;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Attempting to connect to the database...");
 
-        // Calling our utility class
-        Connection conn = DatabaseConnection.getConnection();
-
-        if (conn != null) {
-            System.out.println("We are ready to start building the DAOs!");
-        } else {
-            System.out.println("Connection failed. Let's fix the errors above.");
+        // Tell Java to use the native Operating System theme
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            System.out.println("Could not load system theme.");
         }
+
+        SwingUtilities.invokeLater(() -> {
+            MainDashboard dashboard = new MainDashboard();
+            dashboard.setVisible(true);
+        });
     }
 }
