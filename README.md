@@ -118,11 +118,11 @@ src/
 *   └── Main.java       # Application Entry Point 
 
 Troubleshooting
-"No suitable driver found": You forgot to add the MySQL JDBC .jar file to your project libraries.
+No suitable driver found: You forgot to add the MySQL JDBC .jar file to your project libraries.
 
-"Cannot connect to database": Check your database.properties file. Ensure the URL, username, and password exactly match your local MySQL setup.
+Cannot connect to database: Check your database.properties file. Ensure the URL, username, and password exactly match your local MySQL setup.
 
-"No student found" (But they are in the DB): Ensure the Student_id in the Student table exactly matches their person_id in the Person table. If they don't match, the SQL JOIN query will fail.
+No student found (But they are in the DB): Ensure the Student_id in the Student table exactly matches their person_id in the Person table. If they don't match, the SQL JOIN query will fail.
 
 Author: Kelvin Kipchumba
 
