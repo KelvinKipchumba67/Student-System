@@ -10,7 +10,7 @@ A full-stack, desktop-based University Management Application built with Java. T
 * **Dual Persistence:** Demonstrates flexibility by saving data to both a MySQL Database and a local `.txt` file using the DAO (Data Access Object) pattern.
 * **Modern GUI:** Built with Java Swing, featuring clean layouts, `JTable` data grids, and native OS styling.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 * **Language:** Java (JDK 8+)
 * **Database:** MySQL
