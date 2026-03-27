@@ -84,6 +84,76 @@ public class StudentDatabaseDAO implements StudentDAO {
             System.out.println("Error searching for student: " + e.getMessage());
         }
 
-        return null;
+        return foundStudent;
+    }
+
+    // --- Method for Lecturers to Add Marks to the Student_course table ---
+    public boolean saveStudentMarks(String regNo, String courseCode, String academicYear, String semester, double cat, double exam) {
+        java.sql.Connection conn = com.system.util.DatabaseConnection.getConnection();
+
+        // 1. First, we must find the internal student_id using the Reg_no the lecturer typed
+        String findStudentSql = "SELECT Student_id FROM Student WHERE Reg_no = ?";
+        // 2. Then, we insert the full record into your new table
+        String insertSql = "INSERT INTO Student_course (student_id, course_code, semester, Academic_year, cat_score, Exam_score) VALUES (?, ?, ?, ?, ?, ?)";
+
+        try {
+            // Step 1: Look up the student
+            java.sql.PreparedStatement findStmt = conn.prepareStatement(findStudentSql);
+            findStmt.setString(1, regNo);
+            java.sql.ResultSet rs = findStmt.executeQuery();
+
+            if (rs.next()) {
+                int studentId = rs.getInt("Student_id");
+
+                // Step 2: We found the student! Now insert the marks.
+                java.sql.PreparedStatement insertStmt = conn.prepareStatement(insertSql);
+                insertStmt.setInt(1, studentId);
+                insertStmt.setString(2, courseCode);
+                insertStmt.setString(3, semester);
+                insertStmt.setString(4, academicYear);
+                insertStmt.setDouble(5, cat);
+                insertStmt.setDouble(6, exam);
+
+                insertStmt.executeUpdate();
+                return true; // Success!
+            } else {
+                return false; // Student not found
+            }
+        } catch (java.sql.SQLException e) {
+            System.err.println("Error saving marks: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // --- Method to Fetch Marks for the Result Slip ---
+    public java.util.List<Object[]> getStudentMarks(int studentId) {
+        java.util.List<Object[]> marksList = new java.util.ArrayList<>();
+
+        String sql = "SELECT sc.course_code, c.title, sc.Academic_year, sc.semester, sc.cat_score, sc.Exam_score " +
+                "FROM Student_course sc " +
+                "JOIN Course c ON sc.course_code = c.course_code " +
+                "WHERE sc.student_id = ?";
+
+        try {
+            java.sql.Connection conn = com.system.util.DatabaseConnection.getConnection();
+            java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, studentId);
+            java.sql.ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String code = rs.getString("course_code");
+                String title = rs.getString("title");
+                String year = rs.getString("Academic_year");
+                String semester = rs.getString("semester");
+                double cat = rs.getDouble("cat_score");
+                double exam = rs.getDouble("Exam_score");
+
+                marksList.add(new Object[]{code, title, year, semester, cat, exam});
+            }
+        } catch (java.sql.SQLException e) {
+            System.out.println("Error fetching marks: " + e.getMessage());
+        }
+
+        return marksList;
     }
 }
