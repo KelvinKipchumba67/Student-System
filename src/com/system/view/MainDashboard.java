@@ -34,7 +34,7 @@ public class MainDashboard extends JFrame {
         JButton libraryBtn = new JButton("Open Library System");
         JButton addStudentBtn = new JButton("Add New Student");
         addStudentBtn.setFocusPainted(false);
-
+        JButton addMarksBtn = new JButton("Enter Student Marks");
         studentBtn.setFocusPainted(false);
         lecturerBtn.setFocusPainted(false);
         libraryBtn.setFocusPainted(false);
@@ -45,6 +45,8 @@ public class MainDashboard extends JFrame {
         buttonPanel.add(libraryBtn, gbc);
         add(buttonPanel, BorderLayout.CENTER);
         buttonPanel.add(addStudentBtn, gbc);
+        buttonPanel.add(addMarksBtn, gbc);
+        add(buttonPanel, BorderLayout.CENTER);
 
         //Wire up the buttons
         libraryBtn.addActionListener(e -> {
@@ -66,6 +68,11 @@ public class MainDashboard extends JFrame {
         addStudentBtn.addActionListener(e -> {
             AddStudentView addWindow = new AddStudentView();
             addWindow.setVisible(true);
+        });
+
+        addMarksBtn.addActionListener(e -> {
+            AddMarksView marksWindow = new AddMarksView();
+            marksWindow.setVisible(true);
         });
     }
 }
