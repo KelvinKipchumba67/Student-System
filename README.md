@@ -29,6 +29,8 @@ Follow these instructions to set up and run the project on your local machine.
 * MySQL Server & MySQL Workbench installed.
 * An IDE like IntelliJ IDEA, Eclipse, or VS Code.
 * Download the [MySQL JDBC Driver (Connector/J)](https://dev.mysql.com/downloads/connector/j/) `.jar` file.
+* Fork or clone the repository
+* Launch the project in your IDE of choice
 
 ### 2. Database Setup
 1. Open MySQL Workbench.
