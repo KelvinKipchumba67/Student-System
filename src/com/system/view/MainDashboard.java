@@ -6,73 +6,85 @@ import java.awt.*;
 public class MainDashboard extends JFrame {
 
     public MainDashboard() {
-        //Setup the Main Window
-        setTitle("University Management System");
-        setSize(450, 350);
+        // 1. Setup the Main Window (Made larger for a true dashboard feel)
+        setTitle("Chuka University - Management System");
+        setSize(850, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
+        getContentPane().setBackground(Color.decode("#F4F6F9")); // Very light modern gray background
 
-        //Header
-        JLabel headerLabel = new JLabel("Student System Menu", SwingConstants.CENTER);
-        headerLabel.setFont(new Font("Arial", Font.BOLD, 22));
-        headerLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
-        add(headerLabel, BorderLayout.NORTH);
+        // 2. The Header Banner (Dark Blue Enterprise Look)
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(Color.decode("#1A365D")); // Deep University Blue
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(25, 30, 25, 30));
 
-        //The BULLETPROOF Button Panel (GridBagLayout prevents stretching!)
-        JPanel buttonPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 0, 10, 0); // Adds 10px of space between buttons
-        gbc.gridx = 0; // Aligns them in a single column
-        gbc.fill = GridBagConstraints.HORIZONTAL; // Makes them all the exact same width
-        gbc.ipadx = 40; // Makes the buttons a bit wider internally
-        gbc.ipady = 10; // Makes the buttons a bit taller internally
+        JLabel titleLabel = new JLabel("University Management System");
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 28));
+        titleLabel.setForeground(Color.WHITE);
 
-        // 4. Create Buttons
-        JButton studentBtn = new JButton("Open Student Management");
-        JButton lecturerBtn = new JButton("Lecturer Management");
-        JButton libraryBtn = new JButton("Open Library System");
-        JButton addStudentBtn = new JButton("Add New Student");
-        addStudentBtn.setFocusPainted(false);
-        JButton addMarksBtn = new JButton("Enter Student Marks");
-        studentBtn.setFocusPainted(false);
-        lecturerBtn.setFocusPainted(false);
-        libraryBtn.setFocusPainted(false);
+        JLabel subtitleLabel = new JLabel("Administrative Dashboard");
+        subtitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        subtitleLabel.setForeground(Color.decode("#A0AEC0")); // Soft gray-blue
 
-        //Add to panel using the constraints
-        buttonPanel.add(studentBtn, gbc);
-        buttonPanel.add(lecturerBtn, gbc);
-        buttonPanel.add(libraryBtn, gbc);
-        add(buttonPanel, BorderLayout.CENTER);
-        buttonPanel.add(addStudentBtn, gbc);
-        buttonPanel.add(addMarksBtn, gbc);
-        add(buttonPanel, BorderLayout.CENTER);
+        headerPanel.add(titleLabel, BorderLayout.CENTER);
+        headerPanel.add(subtitleLabel, BorderLayout.SOUTH);
+        add(headerPanel, BorderLayout.NORTH);
 
-        //Wire up the buttons
-        libraryBtn.addActionListener(e -> {
-            LibrarySearchView libraryWindow = new LibrarySearchView();
-            libraryWindow.setVisible(true);
-        });
+        // 3. The Dashboard Grid (2 Rows, 3 Columns with nice spacing)
+        JPanel gridPanel = new JPanel(new GridLayout(2, 3, 25, 25));
+        gridPanel.setOpaque(false); // Let the light gray background show through
+        gridPanel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
 
-        //opens our visual Student System
-        studentBtn.addActionListener(e -> {
-            StudentManagementView studentWindow = new StudentManagementView();
-            studentWindow.setVisible(true);
-        });
+        // 4. Create the Modern Tile Buttons
+        JButton studentBtn = createTileButton("Manage Students", "🎓", "#3B82F6"); // Blue accent
+        JButton addStudentBtn = createTileButton("Register Student", "👤", "#10B981"); // Green accent
+        JButton addMarksBtn = createTileButton("Enter Marks", "📝", "#F59E0B"); // Amber accent
+        JButton lecturerBtn = createTileButton("Lecturer Portal", "👨‍🏫", "#6366F1"); // Indigo accent
+        JButton libraryBtn = createTileButton("Library System", "📚", "#8B5CF6"); // Purple accent
 
-        lecturerBtn.addActionListener(e -> {
-            LecturerManagementView lecturerWindow = new LecturerManagementView();
-            lecturerWindow.setVisible(true);
-        });
+        // Add them to the grid
+        gridPanel.add(studentBtn);
+        gridPanel.add(addStudentBtn);
+        gridPanel.add(addMarksBtn);
+        gridPanel.add(lecturerBtn);
+        gridPanel.add(libraryBtn);
 
-        addStudentBtn.addActionListener(e -> {
-            AddStudentView addWindow = new AddStudentView();
-            addWindow.setVisible(true);
-        });
+        // Add an empty label for the 6th slot to keep the grid perfectly aligned
+        gridPanel.add(new JLabel(""));
 
-        addMarksBtn.addActionListener(e -> {
-            AddMarksView marksWindow = new AddMarksView();
-            marksWindow.setVisible(true);
-        });
+        add(gridPanel, BorderLayout.CENTER);
+
+        // 5. Wire up the buttons (Same logic as before!)
+        libraryBtn.addActionListener(e -> new LibrarySearchView().setVisible(true));
+        studentBtn.addActionListener(e -> new StudentManagementView().setVisible(true));
+        lecturerBtn.addActionListener(e -> new LecturerManagementView().setVisible(true));
+        addStudentBtn.addActionListener(e -> new AddStudentView().setVisible(true));
+        addMarksBtn.addActionListener(e -> new AddMarksView().setVisible(true));
+    }
+
+    /**
+     * Helper Method: Generates a beautiful, large Dashboard Tile.
+     * We use HTML inside the JButton to easily center the icon and text!
+     */
+    private JButton createTileButton(String text, String icon, String topBorderHexColor) {
+        // The HTML formatting gives us a massive icon and bold text underneath
+        String htmlText = "<html><center>" +
+                "<span style='font-size:45px;'>" + icon + "</span><br><br>" +
+                "<span style='font-size:16px; font-family:Segoe UI; font-weight:bold; color:#333333;'>" + text + "</span>" +
+                "</center></html>";
+
+        JButton btn = new JButton(htmlText);
+        btn.setBackground(Color.WHITE);
+        btn.setFocusPainted(false);
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR)); // Turns mouse into a pointing hand
+
+        // Creates a clean white card with a colored stripe at the top to give it a "brand" feel
+        btn.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(5, 1, 1, 1, Color.decode(topBorderHexColor)), // The colored top bar
+                BorderFactory.createEmptyBorder(10, 10, 10, 10) // Internal padding
+        ));
+
+        return btn;
     }
 }
