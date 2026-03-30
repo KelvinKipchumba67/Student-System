@@ -19,57 +19,106 @@ public class StudentManagementView extends JFrame {
     public StudentManagementView() {
         studentDAO = new StudentDatabaseDAO();
 
-        //Setup the Window
-        setTitle("Student Management System");
-        setSize(450, 350);
+        // 1. Setup the Window
+        setTitle("Student Management System - Records");
+        setSize(750, 550); // Made larger to match the rest of the system
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(new BorderLayout(10, 10));
+        setLayout(new BorderLayout());
+        getContentPane().setBackground(Color.WHITE);
 
-        //Top Panel (Search Bar) ---
-        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 15));
-        topPanel.add(new JLabel("Enter Reg No (e.g., CS-1001): "));
+        // 2. The Top Search Bar (Deep Blue Banner)
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
+        searchPanel.setBackground(Color.decode("#1A365D")); // Deep University Blue
+
+        JLabel searchTitle = new JLabel("Enter Reg No:");
+        searchTitle.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        searchTitle.setForeground(Color.WHITE);
+
         searchField = new JTextField(15);
-        JButton searchBtn = new JButton("Search");
+        searchField.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        searchField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.WHITE, 2),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        ));
+
+        JButton searchBtn = new JButton("Search Student");
+        searchBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        searchBtn.setBackground(Color.decode("#3B82F6")); // Vibrant Blue Accent
+        searchBtn.setForeground(Color.WHITE);
         searchBtn.setFocusPainted(false);
-        topPanel.add(searchField);
-        topPanel.add(searchBtn);
-        add(topPanel, BorderLayout.NORTH);
+        searchBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        //Center Panel (The Modern GUI Display) ---
-        JPanel displayPanel = new JPanel(new BorderLayout(10, 10));
-        displayPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 20));
+        searchPanel.add(searchTitle);
+        searchPanel.add(searchField);
+        searchPanel.add(searchBtn);
+        add(searchPanel, BorderLayout.NORTH);
 
-        // Student Details Box (Grid Layout)
-        JPanel detailsBox = new JPanel(new GridLayout(5, 2, 5, 15));
-        detailsBox.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Student Profile"));
+        // 3. The Main Content Panel (With wide margins)
+        JPanel contentPanel = new JPanel(new BorderLayout(0, 25));
+        contentPanel.setBackground(Color.WHITE);
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(30, 50, 40, 50));
+
+        // --- The Profile Card ---
+        JPanel profileCard = new JPanel(new BorderLayout());
+        profileCard.setBackground(Color.WHITE);
+        profileCard.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.decode("#E2E8F0"), 2), // Light gray border
+                BorderFactory.createEmptyBorder(20, 30, 20, 30) // Internal padding
+        ));
+
+        // Profile Title
+        JLabel cardTitle = new JLabel("Official Student Profile");
+        cardTitle.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        cardTitle.setForeground(Color.decode("#1A365D"));
+        cardTitle.setBorder(BorderFactory.createEmptyBorder(0, 0, 15, 0));
+        profileCard.add(cardTitle, BorderLayout.NORTH);
+
+        // Student Details Grid
+        JPanel detailsGrid = new JPanel(new GridLayout(5, 2, 10, 15));
+        detailsGrid.setBackground(Color.WHITE);
+
+        // Helper fonts and colors
+        Font labelFont = new Font("Segoe UI", Font.BOLD, 14);
+        Color labelColor = Color.decode("#4A5568");
+        Font valueFont = new Font("Segoe UI", Font.PLAIN, 15);
+        Color valueColor = Color.decode("#1A365D");
+
+        // Initialize empty value labels
+        nameValue = createValueLabel("--", valueFont, valueColor);
+        emailValue = createValueLabel("--", valueFont, valueColor);
+        phoneValue = createValueLabel("--", valueFont, valueColor);
+        regNoValue = createValueLabel("--", valueFont, valueColor);
+        progValue = createValueLabel("--", valueFont, valueColor);
+
+        // Add to grid
+        detailsGrid.add(createStyledLabel("Full Name:", labelFont, labelColor)); detailsGrid.add(nameValue);
+        detailsGrid.add(createStyledLabel("Email Address:", labelFont, labelColor)); detailsGrid.add(emailValue);
+        detailsGrid.add(createStyledLabel("Phone Number:", labelFont, labelColor)); detailsGrid.add(phoneValue);
+        detailsGrid.add(createStyledLabel("Registration No:", labelFont, labelColor)); detailsGrid.add(regNoValue);
+        detailsGrid.add(createStyledLabel("Programme:", labelFont, labelColor)); detailsGrid.add(progValue);
+
+        profileCard.add(detailsGrid, BorderLayout.CENTER);
+        contentPanel.add(profileCard, BorderLayout.CENTER);
+
+        // 4. The Action Button (Generate Slip)
+        JPanel buttonWrapper = new JPanel();
+        buttonWrapper.setBackground(Color.WHITE);
 
         generateSlipBtn = new JButton("Generate Official Result Slip");
+        generateSlipBtn.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        generateSlipBtn.setBackground(Color.decode("#10B981")); // Emerald Green (Success Action)
+        generateSlipBtn.setForeground(Color.WHITE);
         generateSlipBtn.setFocusPainted(false);
-        generateSlipBtn.setEnabled(false); // Disabled until a student is actually found!
+        generateSlipBtn.setPreferredSize(new Dimension(300, 45));
+        generateSlipBtn.setEnabled(false); // Disabled until a student is found!
 
-        displayPanel.add(detailsBox, BorderLayout.NORTH);
-        displayPanel.add(generateSlipBtn, BorderLayout.SOUTH);
+        buttonWrapper.add(generateSlipBtn);
+        contentPanel.add(buttonWrapper, BorderLayout.SOUTH);
 
-        // Initialize the labels that will hold the data (currently empty)
-        Font boldFont = new Font("SansSerif", Font.BOLD, 14);
-        nameValue = new JLabel("-"); nameValue.setFont(boldFont);
-        emailValue = new JLabel("-"); emailValue.setFont(boldFont);
-        phoneValue = new JLabel("-"); phoneValue.setFont(boldFont);
-        regNoValue = new JLabel("-"); regNoValue.setFont(boldFont);
-        progValue = new JLabel("-"); progValue.setFont(boldFont);
+        add(contentPanel, BorderLayout.CENTER);
 
-        detailsBox.add(new JLabel("Full Name:")); detailsBox.add(nameValue);
-        detailsBox.add(new JLabel("Email Address:")); detailsBox.add(emailValue);
-        detailsBox.add(new JLabel("Phone Number:")); detailsBox.add(phoneValue);
-        detailsBox.add(new JLabel("Registration No:")); detailsBox.add(regNoValue);
-        detailsBox.add(new JLabel("Programme:")); detailsBox.add(progValue);
-
-        // Add the details box to the display panel
-        displayPanel.add(detailsBox, BorderLayout.NORTH);
-        add(displayPanel, BorderLayout.CENTER);
-
-        //Search Logic ---
+        // 5. Search Logic (Unchanged core logic)
         searchBtn.addActionListener(e -> {
             String regNo = searchField.getText().trim();
 
@@ -78,21 +127,20 @@ public class StudentManagementView extends JFrame {
                 return;
             }
 
-            // Ask the database for the student
             Student student = studentDAO.searchStudentByRegNo(regNo);
 
             if (student != null) {
-                // Inject the data into the labels
-                nameValue.setText(student.getFirstName() + " " + student.getLastName());
+                // Update the labels with bold formatting for the values
+                nameValue.setText("<html><b>" + student.getFirstName() + " " + student.getLastName() + "</b></html>");
                 emailValue.setText(student.getEmail());
                 phoneValue.setText(student.getPhoneNo());
                 regNoValue.setText(student.getRegNo());
                 progValue.setText(student.getProgramme());
 
-                // Enable the button and give it the current student's data!
                 generateSlipBtn.setEnabled(true);
+                generateSlipBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-                // Remove old listeners so we don't open 5 windows if clicked multiple times
+                // Clear old listeners to prevent opening 5 windows
                 for (java.awt.event.ActionListener al : generateSlipBtn.getActionListeners()) {
                     generateSlipBtn.removeActionListener(al);
                 }
@@ -102,19 +150,36 @@ public class StudentManagementView extends JFrame {
                     slipWindow.setVisible(true);
                 });
 
-            } else { // 1. Reset all the labels back to dashes
-                nameValue.setText("-");
-                emailValue.setText("-");
-                phoneValue.setText("-");
-                regNoValue.setText("-");
-                progValue.setText("-");
+            } else {
+                // Reset the form cleanly
+                nameValue.setText("--");
+                emailValue.setText("--");
+                phoneValue.setText("--");
+                regNoValue.setText("--");
+                progValue.setText("--");
 
-                // 2. CRITICAL: Lock the button again so it can't be clicked!
                 generateSlipBtn.setEnabled(false);
+                generateSlipBtn.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
-                // 3. Show the error message to the user
                 JOptionPane.showMessageDialog(this, "No student found with Reg No: " + regNo, "Not Found", JOptionPane.ERROR_MESSAGE);
             }
         });
+    }
+
+    // Helper method for the static labels
+    private JLabel createStyledLabel(String text, Font font, Color color) {
+        JLabel label = new JLabel(text, SwingConstants.RIGHT);
+        label.setFont(font);
+        label.setForeground(color);
+        label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 15)); // Push text away from the values
+        return label;
+    }
+
+    // Helper method for the dynamic values
+    private JLabel createValueLabel(String text, Font font, Color color) {
+        JLabel label = new JLabel(text);
+        label.setFont(font);
+        label.setForeground(color);
+        return label;
     }
 }
