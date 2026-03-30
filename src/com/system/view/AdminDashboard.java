@@ -3,9 +3,9 @@ package com.system.view;
 import javax.swing.*;
 import java.awt.*;
 
-public class MainDashboard extends JFrame {
+public class AdminDashboard extends JFrame {
 
-    public MainDashboard() {
+    public AdminDashboard() {
         // 1. Setup the Main Window (Made larger for a true dashboard feel)
         setTitle("Chuka University - Management System");
         setSize(850, 600);
@@ -42,6 +42,7 @@ public class MainDashboard extends JFrame {
         JButton addMarksBtn = createTileButton("Enter Marks", "📝", "#F59E0B"); // Amber accent
         JButton lecturerBtn = createTileButton("Lecturer Portal", "👨‍🏫", "#6366F1"); // Indigo accent
         JButton libraryBtn = createTileButton("Library System", "📚", "#8B5CF6"); // Purple accent
+        JButton addLecturerBtn = createTileButton("Register Lecturer", "📚", "#8B5CF6"); // Purple accent
 
         // Add them to the grid
         gridPanel.add(studentBtn);
@@ -49,6 +50,7 @@ public class MainDashboard extends JFrame {
         gridPanel.add(addMarksBtn);
         gridPanel.add(lecturerBtn);
         gridPanel.add(libraryBtn);
+        gridPanel.add(addLecturerBtn);
 
         // Add an empty label for the 6th slot to keep the grid perfectly aligned
         gridPanel.add(new JLabel(""));
@@ -61,6 +63,7 @@ public class MainDashboard extends JFrame {
         lecturerBtn.addActionListener(e -> new LecturerManagementView().setVisible(true));
         addStudentBtn.addActionListener(e -> new AddStudentView().setVisible(true));
         addMarksBtn.addActionListener(e -> new AddMarksView().setVisible(true));
+        addLecturerBtn.addActionListener(e -> new AddLecturerView().setVisible(true));
     }
 
     /**
