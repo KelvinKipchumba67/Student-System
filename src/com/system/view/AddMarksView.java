@@ -13,65 +13,81 @@ public class AddMarksView extends JFrame {
     public AddMarksView() {
         studentDAO = new StudentDatabaseDAO();
 
+        // 1. Setup Window (Slightly larger for better padding)
         setTitle("Lecturer Portal - Academic Records Entry");
-        setSize(450, 450); // Made slightly taller to fit the new fields
+        setSize(500, 550);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(new BorderLayout(10, 10));
+        setLayout(new BorderLayout());
+        getContentPane().setBackground(Color.WHITE); // Pure white background
 
-        // 1. The Header
+        // 2. The Header (Deep Blue to match the dashboard)
         JLabel headerLabel = new JLabel("Enter Student Scores", SwingConstants.CENTER);
-        headerLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        headerLabel.setBorder(BorderFactory.createEmptyBorder(15, 0, 10, 0));
+        headerLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        headerLabel.setForeground(Color.decode("#1A365D")); // Deep University Blue
+        headerLabel.setBorder(BorderFactory.createEmptyBorder(25, 0, 10, 0));
         add(headerLabel, BorderLayout.NORTH);
 
-        // 2. The Form Panel (6 rows now)
-        JPanel formPanel = new JPanel(new GridLayout(6, 2, 10, 15));
-        formPanel.setBorder(BorderFactory.createEmptyBorder(10, 30, 20, 30));
+        // 3. The Form Panel (Added a wrapper to give it wide margins on the sides)
+        JPanel formWrapper = new JPanel(new BorderLayout());
+        formWrapper.setBackground(Color.WHITE);
+        formWrapper.setBorder(BorderFactory.createEmptyBorder(10, 40, 20, 40)); // Top, Left, Bottom, Right padding
 
-        formPanel.add(new JLabel("Student Reg No:"));
+        JPanel formPanel = new JPanel(new GridLayout(6, 2, 15, 25)); // Increased vertical gap to 25px
+        formPanel.setBackground(Color.WHITE);
+
+        // Helper font for labels
+        Font labelFont = new Font("Segoe UI", Font.BOLD, 13);
+        Color labelColor = Color.decode("#4A5568"); // Soft dark gray
+
+        formPanel.add(createStyledLabel("Student Reg No:", labelFont, labelColor));
         regNoField = new JTextField();
         formPanel.add(regNoField);
 
-        formPanel.add(new JLabel("Course Code:"));
+        formPanel.add(createStyledLabel("Course Code:", labelFont, labelColor));
         courseCodeField = new JTextField();
         formPanel.add(courseCodeField);
 
-        // Dropdown for Academic Year
-        formPanel.add(new JLabel("Academic Year:"));
+        formPanel.add(createStyledLabel("Academic Year:", labelFont, labelColor));
         String[] years = {"2023/2024", "2024/2025", "2025/2026"};
         yearCombo = new JComboBox<>(years);
+        yearCombo.setBackground(Color.WHITE);
         formPanel.add(yearCombo);
 
-        // Dropdown for Semester
-        formPanel.add(new JLabel("Semester:"));
+        formPanel.add(createStyledLabel("Semester:", labelFont, labelColor));
         String[] semesters = {"Semester 1", "Semester 2", "Semester 3"};
         semCombo = new JComboBox<>(semesters);
+        semCombo.setBackground(Color.WHITE);
         formPanel.add(semCombo);
 
-        formPanel.add(new JLabel("CAT Score (Max 30):"));
+        formPanel.add(createStyledLabel("CAT Score (Max 30):", labelFont, labelColor));
         catField = new JTextField();
         formPanel.add(catField);
 
-        formPanel.add(new JLabel("Exam Score (Max 70):"));
+        formPanel.add(createStyledLabel("Exam Score (Max 70):", labelFont, labelColor));
         examField = new JTextField();
         formPanel.add(examField);
 
-        add(formPanel, BorderLayout.CENTER);
+        formWrapper.add(formPanel, BorderLayout.CENTER);
+        add(formWrapper, BorderLayout.CENTER);
 
-        // 3. The Submit Button
+        // 4. The Submit Button (Vibrant Green, large, and clickable)
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(Color.WHITE);
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 30, 0)); // Bottom padding
+
         JButton submitBtn = new JButton("Save Record");
-        submitBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        submitBtn.setBackground(Color.decode("#28A745")); // A nice success green
+        submitBtn.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        submitBtn.setBackground(Color.decode("#10B981")); // Modern Emerald Green
         submitBtn.setForeground(Color.WHITE);
         submitBtn.setFocusPainted(false);
+        submitBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        submitBtn.setPreferredSize(new Dimension(250, 45)); // Make it a nice wide button
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
         buttonPanel.add(submitBtn);
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // 4. Submission Logic
+        // 5. Submission Logic (Unchanged from your working backend)
         submitBtn.addActionListener(e -> {
             String regNo = regNoField.getText().trim();
             String courseCode = courseCodeField.getText().trim();
@@ -87,7 +103,6 @@ public class AddMarksView extends JFrame {
                 double cat = Double.parseDouble(catField.getText().trim());
                 double exam = Double.parseDouble(examField.getText().trim());
 
-                // Validation Rules
                 if (cat < 0 || cat > 30) {
                     JOptionPane.showMessageDialog(this, "CAT score must be between 0 and 30.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
                     return;
@@ -97,12 +112,10 @@ public class AddMarksView extends JFrame {
                     return;
                 }
 
-                // Send to the Database using our new smart method!
                 boolean isSaved = studentDAO.saveStudentMarks(regNo, courseCode, year, semester, cat, exam);
 
                 if (isSaved) {
                     JOptionPane.showMessageDialog(this, "✅ Successfully saved " + courseCode + " marks for " + regNo);
-                    // Clear only the marks, keep the rest in case they are doing data entry for a whole class
                     catField.setText("");
                     examField.setText("");
                     regNoField.requestFocus();
@@ -114,5 +127,13 @@ public class AddMarksView extends JFrame {
                 JOptionPane.showMessageDialog(this, "Marks must be valid numbers!", "Input Error", JOptionPane.ERROR_MESSAGE);
             }
         });
+    }
+
+    // Helper method to keep label styling clean and consistent
+    private JLabel createStyledLabel(String text, Font font, Color color) {
+        JLabel label = new JLabel(text);
+        label.setFont(font);
+        label.setForeground(color);
+        return label;
     }
 }
