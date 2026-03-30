@@ -117,22 +117,61 @@ public class LecturerManagementView extends JFrame {
 
         add(contentPanel, BorderLayout.CENTER);
 
-        // 4. Temporary Action Listener to demonstrate the UI changes
+        // ==========================================
+        // 4. THE LIVE DATABASE CONNECTION (Fixed nested listeners!)
+        // ==========================================
         searchBtn.addActionListener(e -> {
-            String staffNo = searchField.getText().trim();
-            if (staffNo.isEmpty()) return;
+            String staffNoStr = searchField.getText().trim();
+            if (staffNoStr.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please enter a Staff Number.", "Input Required", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
 
-            // TODO: Replace this with your actual LecturerDAO database fetch!
-            // Simulated Database Fetch:
-            nameLabel.setText("Lecturer Name: Dr. Alan Turing");
-            staffNoLabel.setText("Staff Number: " + staffNo);
-            deptLabel.setText("Department: Computer Science");
+            try {
+                int staffNo = Integer.parseInt(staffNoStr);
 
-            // Clear the old table and simulate loading courses
-            tableModel.setRowCount(0);
-            tableModel.addRow(new Object[]{"CSC101", "Introduction to Java Programming"});
-            tableModel.addRow(new Object[]{"CSC102", "Advanced Database Systems"});
-            tableModel.addRow(new Object[]{"CSC103", "Data Structures and Algorithms"});
+                // NOTE: If you named your DAO 'LecturerDAO' previously, you might need to change 'AddLecturerDAO' back to 'LecturerDAO' here depending on your file name!
+                com.system.dao.AddLecturerDAO dao = new com.system.dao.AddLecturerDAO();
+
+                // 1. Ask the database for the Lecturer's details
+                Object[] profile = dao.getLecturerProfile(staffNo);
+
+                if (profile != null) {
+                    // Update the UI Labels with live data!
+                    String fullName = (String) profile[0];
+                    String dept = (String) profile[1];
+                    int lecturerId = (int) profile[2];
+
+                    nameLabel.setText("Lecturer Name: " + fullName);
+                    staffNoLabel.setText("Staff Number: " + staffNo);
+                    deptLabel.setText("Department: " + dept);
+
+                    // 2. Ask the database for their courses and update the table
+                    tableModel.setRowCount(0); // Clear old table data
+
+                    // Note: We changed the table columns to "Course Code" and "Semester"
+                    // to match your database schema perfectly!
+                    String[] newColumns = {"Course Code", "Semester"};
+                    tableModel.setColumnIdentifiers(newColumns);
+
+                    java.util.List<Object[]> courses = dao.getLecturerCourses(lecturerId);
+                    for (Object[] row : courses) {
+                        tableModel.addRow(row);
+                    }
+
+                } else {
+                    // Reset the form cleanly if they don't exist
+                    nameLabel.setText("Lecturer Name: --");
+                    staffNoLabel.setText("Staff Number: --");
+                    deptLabel.setText("Department: --");
+                    tableModel.setRowCount(0);
+
+                    JOptionPane.showMessageDialog(this, "No Lecturer found with Staff Number: " + staffNo, "Not Found", JOptionPane.ERROR_MESSAGE);
+                }
+
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Staff Number must be digits only.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+            }
         });
     }
 }
