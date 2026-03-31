@@ -7,5 +7,6 @@ import java.util.List;
 public interface LecturerDAO {
     List<Course> searchAllocatedCourses(int staffNumber);
     //Search method
+
     Lecturer searchLecturerByStaffNo(int staffNumber);
 }
