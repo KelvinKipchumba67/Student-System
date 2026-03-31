@@ -9,12 +9,12 @@ import java.sql.Statement;
 public class AddLecturerDAO {
 
     // Added 'semester' to the parameters!
-    public boolean addLecturerAndCourse(String fName, String lName, String email, String phone, int staffNo, String dept, String courseCode, String semester) {
+    public boolean addLecturerAndCourse(String fName, String lName, String email, String phone, int staffNo, String dept, String courseCode, String semester, String Academic_year) {
         String insertPerson = "INSERT INTO Person (first_name, last_name, email, phone_no) VALUES (?, ?, ?, ?)";
         String insertLecturer = "INSERT INTO Lecturer (lecturer_id, Staff_number, Department) VALUES (?, ?, ?)";
 
         // Updated this SQL statement to include the semester column!
-        String assignCourse = "INSERT INTO Lecturer_Course (lecturer_id, course_code, semester) VALUES (?, ?, ?)";
+        String assignCourse = "INSERT INTO Lecturer_Course (lecturer_id, course_code, semester, Academic_year) VALUES (?, ?, ?, ?)";
 
         try {
             Connection conn = DatabaseConnection.getConnection();
@@ -43,7 +43,8 @@ public class AddLecturerDAO {
                     PreparedStatement courseStmt = conn.prepareStatement(assignCourse);
                     courseStmt.setInt(1, personId);
                     courseStmt.setString(2, courseCode);
-                    courseStmt.setString(3, semester); // Added the semester parameter here
+                    courseStmt.setString(3, semester);// Added the semester parameter here
+                    courseStmt.setString(4, Academic_year);
                     courseStmt.executeUpdate();
                 }
                 return true;
@@ -62,8 +63,10 @@ public class AddLecturerDAO {
                 "JOIN Lecturer l ON p.person_id = l.lecturer_id " +
                 "WHERE l.Staff_number = ?";
 
-        try (java.sql.Connection conn = DatabaseConnection.getConnection();
-             java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        try {
+            java.sql.Connection conn = DatabaseConnection.getConnection();
+            java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
 
             stmt.setInt(1, staffNo);
             java.sql.ResultSet rs = stmt.executeQuery();
@@ -76,7 +79,7 @@ public class AddLecturerDAO {
                 };
             }
         } catch (Exception e) {
-            System.err.println(" Error fetching Lecturer Profile: " + e.getMessage());
+            System.err.println("🚨 Error fetching Lecturer Profile: " + e.getMessage());
         }
         return null; // Return null if staff number doesn't exist
     }
@@ -86,8 +89,10 @@ public class AddLecturerDAO {
         java.util.List<Object[]> courses = new java.util.ArrayList<>();
         String sql = "SELECT course_code, semester FROM Lecturer_Course WHERE lecturer_id = ?";
 
-        try (java.sql.Connection conn = DatabaseConnection.getConnection();
-             java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
+        // FIX: Removed the parentheses here as well!
+        try {
+            java.sql.Connection conn = DatabaseConnection.getConnection();
+            java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
 
             stmt.setInt(1, lecturerId);
             java.sql.ResultSet rs = stmt.executeQuery();
