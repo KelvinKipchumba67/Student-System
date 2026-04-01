@@ -32,7 +32,6 @@ public class StudentFileDAO implements StudentDAO {
         }
     }
 
-    // NEW: The missing method that fixes your error!
     @Override
     public Student searchStudentByRegNo(String regNo) {
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
@@ -45,8 +44,7 @@ public class StudentFileDAO implements StudentDAO {
                 }
             }
         } catch (IOException e) {
-            // If the file doesn't exist yet, we just ignore it
         }
-        return null; // Return null if the student isn't found
+        return null; // Returns null if the student isn't found
     }
 }

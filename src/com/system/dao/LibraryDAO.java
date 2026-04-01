@@ -15,8 +15,8 @@ public class LibraryDAO {
         List<BookSearchResult> results = new ArrayList<>();
         Connection conn = DatabaseConnection.getConnection();
 
-        // This SQL query joins the Book and Book_copy tables,
-        // then counts how many are 'Available' vs 'Borrowed'
+
+        //joins the Book and Book_copy tables
         String sql = "SELECT b.isnn, b.title, " +
                 "SUM(CASE WHEN c.Status = 'Available' THEN 1 ELSE 0 END) as available_count, " +
                 "SUM(CASE WHEN c.Status = 'Borrowed' THEN 1 ELSE 0 END) as borrowed_count " +
@@ -27,10 +27,10 @@ public class LibraryDAO {
 
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
-            // The % signs mean "anything before or after the search text"
+            // The % signs mean anything before or after the search text
             stmt.setString(1, "%" + searchText + "%");
 
-            ResultSet rs = stmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();// this holds the data sent from the db
 
             while (rs.next()) {
                 results.add(new BookSearchResult(
@@ -46,11 +46,11 @@ public class LibraryDAO {
         return results;
     }
 
-    //BORROW BOOK LOGIC
+    //Borrowing a book logic
     public void borrowBook(int studentId, String isnn) {
         Connection conn = DatabaseConnection.getConnection();
         try {
-            // Step A: Find an available physical copy of the book
+            //Find an available physical copy of the book
             String findCopySql = "SELECT copy_id FROM Book_copy WHERE isnn = ? AND Status = 'Available' LIMIT 1";
             PreparedStatement findStmt = conn.prepareStatement(findCopySql);
             findStmt.setString(1, isnn);
@@ -59,13 +59,13 @@ public class LibraryDAO {
             if (rs.next()) {
                 int copyId = rs.getInt("copy_id");
 
-                // Step B: Mark that copy as 'Borrowed'
+                //Mark that copy as Borrowed if the book is found
                 String updateCopySql = "UPDATE Book_copy SET Status = 'Borrowed' WHERE copy_id = ?";
                 PreparedStatement updateStmt = conn.prepareStatement(updateCopySql);
                 updateStmt.setInt(1, copyId);
                 updateStmt.executeUpdate();
 
-                // Step C: Create the official Loan record (Due in 14 days)
+                //Create the official Loan record which is due in 14 days
                 String insertLoanSql = "INSERT INTO Book_loan (student_id, copy_id, borrow_date, due_date, Status) " +
                         "VALUES (?, ?, CURRENT_DATE, DATE_ADD(CURRENT_DATE, INTERVAL 14 DAY), 'Active')";
                 PreparedStatement loanStmt = conn.prepareStatement(insertLoanSql);
@@ -82,11 +82,11 @@ public class LibraryDAO {
         }
     }
 
-    //RETURN BOOK LOGIC
+    //return book logic
     public void returnBook(int studentId, int copyId) {
         Connection conn = DatabaseConnection.getConnection();
         try {
-            // Step A: Close the active loan
+            //Close the active loan
             String updateLoanSql = "UPDATE Book_loan SET return_date = CURRENT_DATE, Status = 'Returned' " +
                     "WHERE student_id = ? AND copy_id = ? AND Status = 'Active'";
             PreparedStatement loanStmt = conn.prepareStatement(updateLoanSql);
@@ -110,11 +110,11 @@ public class LibraryDAO {
         }
     }
 
-    //RESERVE BOOK LOGIC
+    //reserve book logic
     public void reserveBook(int studentId, String isnn) {
         Connection conn = DatabaseConnection.getConnection();
         try {
-            // Simple insert into the reservation table
+            //insert into the reservation table
             String sql = "INSERT INTO Book_reservation (student_id, isnn, Status) VALUES (?, ?, 'Pending')";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, studentId);

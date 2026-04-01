@@ -8,18 +8,18 @@ import java.sql.Statement;
 
 public class AddLecturerDAO {
 
-    // Added 'semester' to the parameters!
+    //Adding a lecturer and assigning course
     public boolean addLecturerAndCourse(String fName, String lName, String email, String phone, int staffNo, String dept, String courseCode, String semester, String Academic_year) {
         String insertPerson = "INSERT INTO Person (first_name, last_name, email, phone_no) VALUES (?, ?, ?, ?)";
         String insertLecturer = "INSERT INTO Lecturer (lecturer_id, Staff_number, Department) VALUES (?, ?, ?)";
 
-        // Updated this SQL statement to include the semester column!
+        //SQL statement insert the info taken from the program to the db(Lecturer_course table)
         String assignCourse = "INSERT INTO Lecturer_Course (lecturer_id, course_code, semester, Academic_year) VALUES (?, ?, ?, ?)";
 
         try {
             Connection conn = DatabaseConnection.getConnection();
 
-            // 1. Create the Person record
+            //Creates the Person record
             PreparedStatement personStmt = conn.prepareStatement(insertPerson, Statement.RETURN_GENERATED_KEYS);
             personStmt.setString(1, fName);
             personStmt.setString(2, lName);
@@ -27,7 +27,7 @@ public class AddLecturerDAO {
             personStmt.setString(4, phone);
             personStmt.executeUpdate();
 
-            // 2. Get the new ID and create the Lecturer record
+            //Gets the new ID and creates the Lecturer record
             ResultSet rs = personStmt.getGeneratedKeys();
             if (rs.next()) {
                 int personId = rs.getInt(1);
@@ -38,7 +38,7 @@ public class AddLecturerDAO {
                 lecStmt.setString(3, dept);
                 lecStmt.executeUpdate();
 
-                // 3. Assign the Course AND Semester
+                //Assign the Course AND Semester
                 if (!courseCode.isEmpty()) {
                     PreparedStatement courseStmt = conn.prepareStatement(assignCourse);
                     courseStmt.setInt(1, personId);
@@ -56,7 +56,7 @@ public class AddLecturerDAO {
         }
     }
 
-    // 1. Fetches the Lecturer's Profile Data
+    //Fetches the Lecturer's Profile Data
     public Object[] getLecturerProfile(int staffNo) {
         String sql = "SELECT p.first_name, p.last_name, l.Department, l.lecturer_id " +
                 "FROM Person p " +
@@ -79,9 +79,9 @@ public class AddLecturerDAO {
                 };
             }
         } catch (Exception e) {
-            System.err.println("🚨 Error fetching Lecturer Profile: " + e.getMessage());
+            System.err.println("Error fetching Lecturer Profile: " + e.getMessage());
         }
-        return null; // Return null if staff number doesn't exist
+        return null; //Returns null if staff number doesn't exist
     }
 
     // 2. Fetches the exact courses assigned to them
@@ -89,7 +89,6 @@ public class AddLecturerDAO {
         java.util.List<Object[]> courses = new java.util.ArrayList<>();
         String sql = "SELECT course_code, semester FROM Lecturer_Course WHERE lecturer_id = ?";
 
-        // FIX: Removed the parentheses here as well!
         try {
             java.sql.Connection conn = DatabaseConnection.getConnection();
             java.sql.PreparedStatement stmt = conn.prepareStatement(sql);

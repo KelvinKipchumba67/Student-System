@@ -7,16 +7,11 @@ import java.sql.ResultSet;
 
 public class UserDAO {
 
-    /**
-     * Checks the database for matching credentials.
-     * @return The user's role ("Admin", "Lecturer", "Student") or null if login fails.
-     */
     public String authenticateUser(String username, String password) {
         String role = null;
         String sql = "SELECT role FROM System_Users WHERE username = ? AND password = ?";
 
         try {
-            // Removed the try-with-resources so we don't accidentally close the global connection!
             Connection conn = DatabaseConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
 

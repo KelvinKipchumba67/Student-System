@@ -19,7 +19,7 @@ public class StudentDatabaseDAO implements StudentDAO {
         String insertStudentSQL = "INSERT INTO Student (Student_id, Reg_no, Programme) VALUES (?, ?, ?)";
 
         try {
-            //Insert the Person and ask for the generated ID back
+            //Inserts the Person and asks for the generated ID back
             PreparedStatement personStmt = conn.prepareStatement(insertPersonSQL, Statement.RETURN_GENERATED_KEYS);
             personStmt.setString(1, student.getFirstName());
             personStmt.setString(2, student.getLastName());
@@ -28,14 +28,14 @@ public class StudentDatabaseDAO implements StudentDAO {
 
             personStmt.executeUpdate();
 
-            //Grab the auto-generated ID from MySQL
+            //Grabs the auto-generated ID from MySQL
             ResultSet rs = personStmt.getGeneratedKeys();
             int newPersonId = -1;
             if (rs.next()) {
                 newPersonId = rs.getInt(1); // The generated ID
             }
 
-            //Insert into the Student table using the ID we just got
+            //Insert into the Student table using the ID from mysql
             if (newPersonId != -1) {
                 PreparedStatement studentStmt = conn.prepareStatement(insertStudentSQL);
                 studentStmt.setInt(1, newPersonId);
@@ -43,7 +43,7 @@ public class StudentDatabaseDAO implements StudentDAO {
                 studentStmt.setString(3, student.getProgramme());
 
                 studentStmt.executeUpdate();
-                System.out.println("Success: " + student.getFirstName() + " was saved to the database!");
+                System.out.println("Success: " + student.getFirstName() + " was saved to the database");
             }
 
         } catch (Exception e) {
@@ -57,7 +57,7 @@ public class StudentDatabaseDAO implements StudentDAO {
         Connection conn = DatabaseConnection.getConnection();
         Student foundStudent = null;
 
-        // We JOIN the Student table with the Person table to get all their details at once
+        //join query to get all records at once
         String sql = "SELECT p.person_id, p.first_name, p.last_name, p.email, p.phone_no, s.Reg_no, s.Programme " +
                 "FROM Student s " +
                 "JOIN Person p ON s.Student_id = p.person_id " +
@@ -69,7 +69,6 @@ public class StudentDatabaseDAO implements StudentDAO {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                // If we found them, build a new Student object from the database row!
                 foundStudent = new Student(
                         rs.getInt("person_id"),
                         rs.getString("first_name"),
@@ -87,17 +86,17 @@ public class StudentDatabaseDAO implements StudentDAO {
         return foundStudent;
     }
 
-    // --- Method for Lecturers to Add Marks to the Student_course table ---
+    //Method for Lecturers to add Marks to the Student_course table
     public boolean saveStudentMarks(String regNo, String courseCode, String academicYear, String semester, double cat, double exam) {
         java.sql.Connection conn = com.system.util.DatabaseConnection.getConnection();
 
-        // 1. First, we must find the internal student_id using the Reg_no the lecturer typed
+        //finds the internal student_id using the Reg_no the lecturer typed
         String findStudentSql = "SELECT Student_id FROM Student WHERE Reg_no = ?";
-        // 2. Then, we insert the full record into your new table
+        //inserts the full record into  Student_course
         String insertSql = "INSERT INTO Student_course (student_id, course_code, semester, Academic_year, cat_score, Exam_score) VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
-            // Step 1: Look up the student
+            //Look up the student
             java.sql.PreparedStatement findStmt = conn.prepareStatement(findStudentSql);
             findStmt.setString(1, regNo);
             java.sql.ResultSet rs = findStmt.executeQuery();
@@ -105,8 +104,8 @@ public class StudentDatabaseDAO implements StudentDAO {
             if (rs.next()) {
                 int studentId = rs.getInt("Student_id");
 
-                // Step 2: We found the student! Now insert the marks.
-                java.sql.PreparedStatement insertStmt = conn.prepareStatement(insertSql);
+                //inserts the marks.
+                java.sql.PreparedStatement insertStmt = conn.prepareStatement(insertSql);//prevents sql injection
                 insertStmt.setInt(1, studentId);
                 insertStmt.setString(2, courseCode);
                 insertStmt.setString(3, semester);
@@ -115,9 +114,9 @@ public class StudentDatabaseDAO implements StudentDAO {
                 insertStmt.setDouble(6, exam);
 
                 insertStmt.executeUpdate();
-                return true; // Success!
+                return true;
             } else {
-                return false; // Student not found
+                return false;//if no student is found
             }
         } catch (java.sql.SQLException e) {
             System.err.println("Error saving marks: " + e.getMessage());
@@ -125,7 +124,7 @@ public class StudentDatabaseDAO implements StudentDAO {
         }
     }
 
-    // --- Method to Fetch Marks for the Result Slip ---
+    //Method to Fetch Marks for the Result Slip
     public java.util.List<Object[]> getStudentMarks(int studentId) {
         java.util.List<Object[]> marksList = new java.util.ArrayList<>();
 

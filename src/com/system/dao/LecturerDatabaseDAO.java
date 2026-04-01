@@ -17,11 +17,6 @@ public class LecturerDatabaseDAO implements LecturerDAO {
         List<Course> foundCourses = new ArrayList<>();
         Connection conn = DatabaseConnection.getConnection();
 
-        // SQL JOIN Query:
-        //We want the code and title from the Course table (c)
-        //We link Course to Lecturer_course (lc) using the course_code
-        //We link Lecturer_course to Lecturer (l) using the lecturer_id
-        //We filter it so we only get results for the exact Staff_number entered
         String sql = "SELECT c.course_code, c.title " +
                 "FROM Course c " +
                 "JOIN Lecturer_course lc ON c.course_code = lc.course_code " +
@@ -34,7 +29,7 @@ public class LecturerDatabaseDAO implements LecturerDAO {
 
             ResultSet rs = stmt.executeQuery();
 
-            // Loop through the results and create Course objects in Java
+            //Loops through the results and creates Course objects in Java
             while (rs.next()) {
                 String code = rs.getString("course_code");
                 String title = rs.getString("title");
