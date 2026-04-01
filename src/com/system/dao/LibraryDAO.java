@@ -126,4 +126,32 @@ public class LibraryDAO {
             System.out.println("Error reserving book: " + e.getMessage());
         }
     }
+
+    public boolean recordTransaction(int userId, String isnn, String type) {
+        String sql = "INSERT INTO Library_Transactions (isnn, user_id, transaction_type, due_date) " +
+                "VALUES (?, ?, ?, ?)";
+
+        try {
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            stmt.setString(1, isnn);
+            stmt.setInt(2, userId);
+            stmt.setString(3, type);
+
+            // Logical check: If borrowing, set a 14-day due date
+            if (type.equals("Borrow")) {
+                long fourteenDays = 14L * 24 * 60 * 60 * 1000;
+                stmt.setDate(4, new java.sql.Date(System.currentTimeMillis() + fourteenDays));
+            } else {
+                stmt.setDate(4, null);
+            }
+
+            stmt.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            System.err.println("Transaction Error: " + e.getMessage());
+            return false;
+        }
+    }
 }
