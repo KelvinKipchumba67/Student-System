@@ -1,15 +1,14 @@
 package com.system.model;
 
 public class Person {
-    //Instance Variables (The data this blueprint holds)
-    //We make them 'private' so outside code can't accidentally mess them up.
+    //instance variables
     private int personId;
     private String firstName;
     private String lastName;
     private String email;
     private String phoneNo;
 
-    //Constructor (How we build a new Person object)
+    //Constructor
     public Person(int personId, String firstName, String lastName, String email, String phoneNo) {
         this.personId = personId;
         this.firstName = firstName;
@@ -18,7 +17,7 @@ public class Person {
         this.phoneNo = phoneNo;
     }
 
-    //Getters and Setters (How outside code interacts with our private variables)
+    //Getters and Setters
     public int getPersonId() {
         return personId;
     }

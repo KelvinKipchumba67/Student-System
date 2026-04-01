@@ -6,7 +6,7 @@ import java.util.List;
 public class Lecturer extends Person {
     private int staffNumber;
     private String department;
-    private List<Course> allocatedCourses; // Maps to the Lecturer_course table
+    private List<Course> allocatedCourses; //Maps to the Lecturer_course table
 
     public Lecturer(int personId, String firstName, String lastName, String email, String phoneNo, int staffNumber, String department) {
         super(personId, firstName, lastName, email, phoneNo);
@@ -15,7 +15,7 @@ public class Lecturer extends Person {
         this.allocatedCourses = new ArrayList<>();
     }
 
-    // Business Logic: Allocating a course to a lecturer
+    //Allocating a course to a lecturer
     public void allocateCourse(Course course) {
         if (!allocatedCourses.contains(course)) {
             allocatedCourses.add(course);

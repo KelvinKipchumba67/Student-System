@@ -31,7 +31,7 @@ public class Book {
     public String getTitle() { return title; }
     public List<BookCopy> getCopies() { return copies; }
 
-    // Business Logic: Count how many copies are actually available right now
+    //Counts how many copies are actually available right now
     public int getAvailableCopyCount() {
         int count = 0;
         for (BookCopy copy : copies) {

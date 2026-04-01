@@ -1,11 +1,11 @@
 package com.system.model;
 
 public class StudentCourse {
-    private int id; // Matches the auto-increment ID in the DB
+    private int id; //Matches the auto-increment ID in the DB
     private Course course;
     private String semester;
     private String academicYear;
-    private Score score; // Holds the CAT and Exam scores
+    private Score score;
 
     public StudentCourse(int id, Course course, String semester, String academicYear, Score score) {
         this.id = id;

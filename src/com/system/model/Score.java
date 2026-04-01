@@ -9,7 +9,7 @@ public class Score {
         setExamScore(examScore);
     }
 
-    // Enforcing the Max 30 rule
+    //Enforcing the Max 30 rule
     public void setCatScore(double catScore) {
         if (catScore < 0 || catScore > 30) {
             throw new IllegalArgumentException("CAT score must be between 0 and 30");
@@ -17,7 +17,7 @@ public class Score {
         this.catScore = catScore;
     }
 
-    // Enforcing the Max 70 rule
+    //Enforcing the Max 70 rule
     public void setExamScore(double examScore) {
         if (examScore < 0 || examScore > 70) {
             throw new IllegalArgumentException("Exam score must be between 0 and 70");

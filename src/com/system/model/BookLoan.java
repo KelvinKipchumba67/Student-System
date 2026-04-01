@@ -19,18 +19,18 @@ public class BookLoan {
         this.dueDate = dueDate;
         this.status = LibraryEnums.LoanStatus.ACTIVE;
 
-        // When a loan is created, the physical copy is now borrowed
+        //sets status to borrowed
         this.copy.setStatus(LibraryEnums.CopyStatus.BORROWED);
     }
 
-    // Method to handle returning the book
+    //handles returning the book
     public void returnBook(LocalDate dateReturned) {
         this.returnDate = dateReturned;
         this.status = LibraryEnums.LoanStatus.RETURNED;
         this.copy.setStatus(LibraryEnums.CopyStatus.AVAILABLE);
     }
 
-    // Getters and Setters...
+    //Getters and Setters...
     public Student getStudent() { return student; }
     public BookCopy getCopy() { return copy; }
 }

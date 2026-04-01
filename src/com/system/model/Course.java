@@ -12,7 +12,6 @@ public class Course {
     public String getCourseCode() { return courseCode; }
     public String getTitle() { return title; }
 
-    // We override this to make printing the course look nice later
     @Override
     public String toString() {
         return courseCode + " - " + title;
