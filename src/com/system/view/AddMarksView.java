@@ -13,7 +13,7 @@ public class AddMarksView extends JFrame {
     public AddMarksView() {
         studentDAO = new StudentDatabaseDAO();
 
-        // 1. Setup Window (Slightly larger for better padding)
+        //Setup Window
         setTitle("Lecturer Portal - Academic Records Entry");
         setSize(500, 550);
         setLocationRelativeTo(null);
@@ -21,14 +21,14 @@ public class AddMarksView extends JFrame {
         setLayout(new BorderLayout());
         getContentPane().setBackground(Color.WHITE); // Pure white background
 
-        // 2. The Header (Deep Blue to match the dashboard)
+        //The Header
         JLabel headerLabel = new JLabel("Enter Student Scores", SwingConstants.CENTER);
         headerLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
         headerLabel.setForeground(Color.decode("#1A365D")); // Deep University Blue
         headerLabel.setBorder(BorderFactory.createEmptyBorder(25, 0, 10, 0));
         add(headerLabel, BorderLayout.NORTH);
 
-        // 3. The Form Panel (Added a wrapper to give it wide margins on the sides)
+        //The Form Panel
         JPanel formWrapper = new JPanel(new BorderLayout());
         formWrapper.setBackground(Color.WHITE);
         formWrapper.setBorder(BorderFactory.createEmptyBorder(10, 40, 20, 40)); // Top, Left, Bottom, Right padding
@@ -36,7 +36,7 @@ public class AddMarksView extends JFrame {
         JPanel formPanel = new JPanel(new GridLayout(6, 2, 15, 25)); // Increased vertical gap to 25px
         formPanel.setBackground(Color.WHITE);
 
-        // Helper font for labels
+        //Helper font for labels
         Font labelFont = new Font("Segoe UI", Font.BOLD, 13);
         Color labelColor = Color.decode("#4A5568"); // Soft dark gray
 
@@ -71,23 +71,23 @@ public class AddMarksView extends JFrame {
         formWrapper.add(formPanel, BorderLayout.CENTER);
         add(formWrapper, BorderLayout.CENTER);
 
-        // 4. The Submit Button (Vibrant Green, large, and clickable)
+        //Submit Button
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(Color.WHITE);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 30, 0)); // Bottom padding
 
         JButton submitBtn = new JButton("Save Record");
         submitBtn.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        submitBtn.setBackground(Color.decode("#10B981")); // Modern Emerald Green
+        submitBtn.setBackground(Color.decode("#10B981"));
         submitBtn.setForeground(Color.WHITE);
         submitBtn.setFocusPainted(false);
         submitBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        submitBtn.setPreferredSize(new Dimension(250, 45)); // Make it a nice wide button
+        submitBtn.setPreferredSize(new Dimension(250, 45));
 
         buttonPanel.add(submitBtn);
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // 5. Submission Logic (Unchanged from your working backend)
+        //Submission Logic
         submitBtn.addActionListener(e -> {
             String regNo = regNoField.getText().trim();
             String courseCode = courseCodeField.getText().trim();
@@ -129,7 +129,7 @@ public class AddMarksView extends JFrame {
         });
     }
 
-    // Helper method to keep label styling clean and consistent
+    //Helper method to keep label styling consistent
     private JLabel createStyledLabel(String text, Font font, Color color) {
         JLabel label = new JLabel(text);
         label.setFont(font);

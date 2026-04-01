@@ -14,7 +14,7 @@ public class LecturerManagementView extends JFrame {
     private DefaultTableModel tableModel;
 
     public LecturerManagementView() {
-        // 1. Setup Window
+        //Setup
         setTitle("Lecturer Portal - Course Allocations");
         setSize(850, 600);
         setLocationRelativeTo(null);
@@ -22,9 +22,9 @@ public class LecturerManagementView extends JFrame {
         setLayout(new BorderLayout());
         getContentPane().setBackground(Color.WHITE);
 
-        // 2. The Top Search Bar (Deep Blue Banner)
+        //Search Bar
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
-        searchPanel.setBackground(Color.decode("#1A365D")); // Deep University Blue
+        searchPanel.setBackground(Color.decode("#1A365D"));
 
         JLabel searchTitle = new JLabel("Search Lecturer (Staff No):");
         searchTitle.setFont(new Font("Segoe UI", Font.BOLD, 16));
@@ -49,17 +49,17 @@ public class LecturerManagementView extends JFrame {
         searchPanel.add(searchBtn);
         add(searchPanel, BorderLayout.NORTH);
 
-        // 3. The Main Content Panel (With wide margins)
+        //Content Panel
         JPanel contentPanel = new JPanel(new BorderLayout(0, 25)); // 25px vertical gap
         contentPanel.setBackground(Color.WHITE);
         contentPanel.setBorder(BorderFactory.createEmptyBorder(25, 40, 30, 40));
 
-        // --- SECTION A: The Lecturer Profile Card ---
+        //Lecturer profile card
         JPanel profileCard = new JPanel(new GridLayout(3, 1, 5, 5));
         profileCard.setBackground(Color.WHITE);
         profileCard.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.decode("#E2E8F0"), 1), // Light gray border
-                BorderFactory.createEmptyBorder(15, 20, 15, 20) // Internal padding
+                BorderFactory.createLineBorder(Color.decode("#E2E8F0"), 1),
+                BorderFactory.createEmptyBorder(15, 20, 15, 20)
         ));
 
         nameLabel = new JLabel("Lecturer Name: --");
@@ -80,7 +80,7 @@ public class LecturerManagementView extends JFrame {
 
         contentPanel.add(profileCard, BorderLayout.NORTH);
 
-        // --- SECTION B: The Allocated Courses Table ---
+        //Allocated Courses Table
         JPanel tableWrapper = new JPanel(new BorderLayout(0, 10));
         tableWrapper.setBackground(Color.WHITE);
 
@@ -93,7 +93,6 @@ public class LecturerManagementView extends JFrame {
         tableModel = new DefaultTableModel(columns, 0);
         courseTable = new JTable(tableModel);
 
-        // Modern Table UI Upgrades
         courseTable.setRowHeight(35);
         courseTable.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         courseTable.setSelectionBackground(Color.decode("#E2E8F0"));
@@ -117,9 +116,7 @@ public class LecturerManagementView extends JFrame {
 
         add(contentPanel, BorderLayout.CENTER);
 
-        // ==========================================
-        // 4. THE LIVE DATABASE CONNECTION (Fixed nested listeners!)
-        // ==========================================
+
         searchBtn.addActionListener(e -> {
             String staffNoStr = searchField.getText().trim();
             if (staffNoStr.isEmpty()) {
@@ -130,14 +127,11 @@ public class LecturerManagementView extends JFrame {
             try {
                 int staffNo = Integer.parseInt(staffNoStr);
 
-                // NOTE: If you named your DAO 'LecturerDAO' previously, you might need to change 'AddLecturerDAO' back to 'LecturerDAO' here depending on your file name!
                 com.system.dao.AddLecturerDAO dao = new com.system.dao.AddLecturerDAO();
 
-                // 1. Ask the database for the Lecturer's details
                 Object[] profile = dao.getLecturerProfile(staffNo);
 
                 if (profile != null) {
-                    // Update the UI Labels with live data!
                     String fullName = (String) profile[0];
                     String dept = (String) profile[1];
                     int lecturerId = (int) profile[2];
@@ -146,11 +140,9 @@ public class LecturerManagementView extends JFrame {
                     staffNoLabel.setText("Staff Number: " + staffNo);
                     deptLabel.setText("Department: " + dept);
 
-                    // 2. Ask the database for their courses and update the table
-                    tableModel.setRowCount(0); // Clear old table data
 
-                    // Note: We changed the table columns to "Course Code" and "Semester"
-                    // to match your database schema perfectly!
+                    tableModel.setRowCount(0);
+
                     String[] newColumns = {"Course Code", "Semester"};
                     tableModel.setColumnIdentifiers(newColumns);
 
@@ -160,7 +152,6 @@ public class LecturerManagementView extends JFrame {
                     }
 
                 } else {
-                    // Reset the form cleanly if they don't exist
                     nameLabel.setText("Lecturer Name: --");
                     staffNoLabel.setText("Staff Number: --");
                     deptLabel.setText("Department: --");

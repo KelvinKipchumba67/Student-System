@@ -10,15 +10,15 @@ public class LecturerDashboard extends JFrame {
     public LecturerDashboard(String staffUsername) {
         this.loggedInStaff = staffUsername;
 
-        // 1. Setup the Window
-        setTitle("Chuka University - Lecturer Portal");
+        //Setup
+        setTitle("University - Lecturer Portal");
         setSize(850, 450); // Wide enough to comfortably fit 3 cards
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
         getContentPane().setBackground(Color.decode("#F4F6F9"));
 
-        // 2. The Header
+        //Header
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBackground(Color.decode("#1A365D"));
         headerPanel.setBorder(BorderFactory.createEmptyBorder(25, 30, 25, 30));
@@ -35,16 +35,15 @@ public class LecturerDashboard extends JFrame {
         headerPanel.add(subtitleLabel, BorderLayout.SOUTH);
         add(headerPanel, BorderLayout.NORTH);
 
-        // 3. The Dashboard Cards (3 specific tools for Lecturers)
+        //Dashboard Cards
         JPanel cardPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 35, 60));
         cardPanel.setOpaque(false);
 
-        // Creating the 3 allowed buttons
+        //buttons
         JButton manageStudentBtn = createTileButton("Student Records", "🎓", "#3B82F6"); // Blue
         JButton addMarksBtn = createTileButton("Enter Marks", "📝", "#F59E0B"); // Amber
         JButton libraryBtn = createTileButton("Digital Library", "📚", "#8B5CF6"); // Purple
 
-        // Force the buttons to be perfectly uniform cards
         Dimension cardSize = new Dimension(220, 180);
         manageStudentBtn.setPreferredSize(cardSize);
         addMarksBtn.setPreferredSize(cardSize);
@@ -56,7 +55,7 @@ public class LecturerDashboard extends JFrame {
 
         add(cardPanel, BorderLayout.CENTER);
 
-        // 4. Wiring up the Actions to the views we already built!
+        //making the buttons clickable
         manageStudentBtn.addActionListener(e -> new StudentManagementView().setVisible(true));
         addMarksBtn.addActionListener(e -> new AddMarksView().setVisible(true));
         libraryBtn.addActionListener(e -> new LibrarySearchView().setVisible(true));

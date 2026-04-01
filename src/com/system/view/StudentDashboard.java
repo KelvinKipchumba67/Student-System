@@ -13,15 +13,15 @@ public class StudentDashboard extends JFrame {
     public StudentDashboard(String studentRegNo) {
         this.loggedInRegNo = studentRegNo;
 
-        // 1. Setup the Window
-        setTitle("Chuka University - Student Portal");
-        setSize(700, 450); // Adjusted slightly for a nicer widescreen ratio
+        //Setup
+        setTitle("University - Student Portal");
+        setSize(700, 450);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
         getContentPane().setBackground(Color.decode("#F4F6F9"));
 
-        // 2. The Header
+        //Header
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBackground(Color.decode("#1A365D"));
         headerPanel.setBorder(BorderFactory.createEmptyBorder(25, 30, 25, 30));
@@ -38,15 +38,12 @@ public class StudentDashboard extends JFrame {
         headerPanel.add(subtitleLabel, BorderLayout.SOUTH);
         add(headerPanel, BorderLayout.NORTH);
 
-        // 3. The Dashboard Cards (FIXED LAYOUT)
-        // Using FlowLayout stops the buttons from stretching infinitely!
         JPanel cardPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 60));
         cardPanel.setOpaque(false);
 
         JButton libraryBtn = createTileButton("Digital Library", "📚", "#8B5CF6");
         JButton transcriptBtn = createTileButton("My Transcript", "🎓", "#10B981");
 
-        // Force the buttons to remain as neat, rigid cards
         libraryBtn.setPreferredSize(new Dimension(250, 180));
         transcriptBtn.setPreferredSize(new Dimension(250, 180));
 
@@ -54,7 +51,7 @@ public class StudentDashboard extends JFrame {
         cardPanel.add(transcriptBtn);
         add(cardPanel, BorderLayout.CENTER);
 
-        // 4. Wiring up the Actions
+        //actions
         libraryBtn.addActionListener(e -> new LibrarySearchView().setVisible(true));
 
         transcriptBtn.addActionListener(e -> {
@@ -70,7 +67,6 @@ public class StudentDashboard extends JFrame {
     }
 
     private JButton createTileButton(String text, String icon, String topBorderHexColor) {
-        // I also bumped up the font sizes in the HTML slightly to fit the new card size better
         String htmlText = "<html><center><span style='font-size:50px;'>" + icon + "</span><br><br><span style='font-size:18px; font-family:Segoe UI; font-weight:bold; color:#333333;'>" + text + "</span></center></html>";
         JButton btn = new JButton(htmlText);
         btn.setBackground(Color.WHITE);

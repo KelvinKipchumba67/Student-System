@@ -13,15 +13,15 @@ public class LoginView extends JFrame {
     public LoginView() {
         userDAO = new UserDAO();
 
-        // 1. Setup the Window
-        setTitle("Chuka University - Secure Login");
+        //Setup
+        setTitle("University System - Secure Login");
         setSize(500, 550);
-        setLocationRelativeTo(null); // Centers on screen
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Closing login closes the app
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
-        getContentPane().setBackground(Color.decode("#F4F6F9")); // Light gray desktop background
+        getContentPane().setBackground(Color.decode("#F4F6F9"));
 
-        // 2. The Main Login Card (White box in the center)
+        //Login Card
         JPanel cardWrapper = new JPanel(new GridBagLayout());
         cardWrapper.setOpaque(false);
 
@@ -29,11 +29,10 @@ public class LoginView extends JFrame {
         loginCard.setBackground(Color.WHITE);
         loginCard.setPreferredSize(new Dimension(380, 400));
         loginCard.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.decode("#E2E8F0"), 1), // Subtle border
-                BorderFactory.createEmptyBorder(30, 40, 40, 40) // Internal padding
+                BorderFactory.createLineBorder(Color.decode("#E2E8F0"), 1),
+                BorderFactory.createEmptyBorder(30, 40, 40, 40)
         ));
 
-        // --- A. Card Header ---
         JPanel headerPanel = new JPanel(new GridLayout(2, 1));
         headerPanel.setBackground(Color.WHITE);
 
@@ -49,7 +48,7 @@ public class LoginView extends JFrame {
         headerPanel.add(titleLabel);
         loginCard.add(headerPanel, BorderLayout.NORTH);
 
-        // --- B. The Input Fields ---
+        //Input fields
         JPanel formPanel = new JPanel(new GridLayout(4, 1, 0, 10));
         formPanel.setBackground(Color.WHITE);
 
@@ -86,7 +85,7 @@ public class LoginView extends JFrame {
         formPanel.add(passwordField);
         loginCard.add(formPanel, BorderLayout.CENTER);
 
-        // --- C. The Login Button ---
+        //The login button
         JButton loginBtn = new JButton("Authenticate");
         loginBtn.setFont(new Font("Segoe UI", Font.BOLD, 16));
         loginBtn.setBackground(Color.decode("#1A365D")); // Deep Blue Button
@@ -97,7 +96,7 @@ public class LoginView extends JFrame {
 
         loginCard.add(loginBtn, BorderLayout.SOUTH);
 
-        // Add the card to the wrapper, then to the screen
+
         cardWrapper.add(loginCard);
         add(cardWrapper, BorderLayout.CENTER);
 
@@ -111,7 +110,7 @@ public class LoginView extends JFrame {
                 return;
             }
 
-            // Ask the database to verify the user
+            // Asks the database to verify the user
             String role = userDAO.authenticateUser(username, password);
 
             if (role.equals("Admin")) {
@@ -124,7 +123,6 @@ public class LoginView extends JFrame {
             }
             else if (role.equals("Student")) {
                 JOptionPane.showMessageDialog(null, "Welcome, Student.");
-                // THE FIX: Launch the restricted Student Dashboard and hand it the Reg No!
                 new StudentDashboard(username).setVisible(true);
             }
 

@@ -20,18 +20,18 @@ public class LibrarySearchView extends JFrame {
     public LibrarySearchView() {
         libraryDAO = new LibraryDAO();
 
-        // 1. Setup the Main Window (Made larger for a modern dashboard feel)
-        setTitle("Chuka University - Digital Library Search");
+        //Setup
+        setTitle("University System - Digital Library Search");
         setSize(800, 550);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
         getContentPane().setBackground(Color.WHITE); // Pure white background
 
-        // 2. Setup the Top Panel (Deep Blue Banner with Search Bar)
+        //Setup
         JPanel topPanel = new JPanel(new BorderLayout(15, 0));
         topPanel.setBackground(Color.decode("#1A365D")); // Deep University Blue
-        topPanel.setBorder(BorderFactory.createEmptyBorder(25, 30, 25, 30)); // Generous padding
+        topPanel.setBorder(BorderFactory.createEmptyBorder(25, 30, 25, 30));
 
         JLabel searchLabel = new JLabel("Search Library Catalog:");
         searchLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
@@ -39,7 +39,6 @@ public class LibrarySearchView extends JFrame {
 
         searchField = new JTextField();
         searchField.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-        // Adds a white border and internal padding so the text isn't cramped
         searchField.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(Color.WHITE, 2),
                 BorderFactory.createEmptyBorder(8, 15, 8, 15)
@@ -49,56 +48,52 @@ public class LibrarySearchView extends JFrame {
         topPanel.add(searchField, BorderLayout.CENTER);
         add(topPanel, BorderLayout.NORTH);
 
-        // 3. Setup the Table (Results)
         String[] columns = {"ISBN", "Book Title", "Available Copies", "Borrowed Copies"};
         tableModel = new DefaultTableModel(columns, 0);
         resultsTable = new JTable(tableModel);
 
-        // --- MODERN UI UPGRADES FOR THE TABLE ---
-        resultsTable.setRowHeight(35); // Gives the text breathing room
+        resultsTable.setRowHeight(35);
         resultsTable.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        resultsTable.setSelectionBackground(Color.decode("#E2E8F0")); // Soft gray/blue when clicked
+        resultsTable.setSelectionBackground(Color.decode("#E2E8F0"));
         resultsTable.setSelectionForeground(Color.BLACK);
-        resultsTable.setShowGrid(false); // Removes the ugly default grid lines
+        resultsTable.setShowGrid(false);
         resultsTable.setIntercellSpacing(new Dimension(0, 0));
-        resultsTable.setEnabled(false); // Makes it read-only for the user
+        resultsTable.setEnabled(false);
 
-        // Style the Table Header
         JTableHeader header = resultsTable.getTableHeader();
         header.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        header.setBackground(Color.decode("#F8FAFC")); // Very light gray header background
-        header.setForeground(Color.decode("#4A5568")); // Dark gray text
-        header.setPreferredSize(new Dimension(100, 45)); // Taller header
-        // ----------------------------------------
+        header.setBackground(Color.decode("#F8FAFC"));
+        header.setPreferredSize(new Dimension(100, 45));
 
-        // Wrap the table in a scroll pane and give it invisible margins
+
+
         JScrollPane scrollPane = new JScrollPane(resultsTable);
         scrollPane.setBorder(BorderFactory.createEmptyBorder(20, 30, 30, 30));
         scrollPane.getViewport().setBackground(Color.WHITE);
         add(scrollPane, BorderLayout.CENTER);
 
-        // 4. Add the "Search-As-You-Type" Listener (Unchanged Logic)
+        //Search-As-You-Type listener logic
         searchField.getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { triggerSearch(); }
             public void removeUpdate(DocumentEvent e) { triggerSearch(); }
             public void changedUpdate(DocumentEvent e) { triggerSearch(); }
         });
 
-        // Load all books initially
+        //Loads all books initially
         triggerSearch();
     }
 
-    // This method is called every time a letter is typed or deleted
+    //This method is called every time a letter is typed or deleted
     private void triggerSearch() {
         String searchText = searchField.getText();
 
-        // Ask the database for matching books
+        //Asks the database for matching books
         List<BookSearchResult> results = libraryDAO.searchBooksAsYouType(searchText);
 
-        // Clear the old table data
+        //Clears the old table data
         tableModel.setRowCount(0);
 
-        // Add the new results to the table
+        //Adds the new results to the table
         for (BookSearchResult book : results) {
             tableModel.addRow(new Object[]{
                     book.getIsnn(),

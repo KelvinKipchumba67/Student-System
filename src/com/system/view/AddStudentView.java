@@ -14,22 +14,22 @@ public class AddStudentView extends JFrame {
     public AddStudentView() {
         studentDAO = new StudentDatabaseDAO();
 
-        // 1. Setup Window
+        //Setup Window
         setTitle("Admissions - Register New Student");
-        setSize(550, 600); // Taller to fit all the student details
+        setSize(550, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
         getContentPane().setBackground(Color.WHITE);
 
-        // 2. The Header
+        //Header
         JLabel headerLabel = new JLabel("Student Registration Form", SwingConstants.CENTER);
         headerLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
         headerLabel.setForeground(Color.decode("#1A365D"));
         headerLabel.setBorder(BorderFactory.createEmptyBorder(25, 0, 10, 0));
         add(headerLabel, BorderLayout.NORTH);
 
-        // 3. The Form Panel (With wide margins)
+        //Form Panel
         JPanel formWrapper = new JPanel(new BorderLayout());
         formWrapper.setBackground(Color.WHITE);
         formWrapper.setBorder(BorderFactory.createEmptyBorder(10, 50, 20, 50));
@@ -69,7 +69,7 @@ public class AddStudentView extends JFrame {
         formWrapper.add(formPanel, BorderLayout.CENTER);
         add(formWrapper, BorderLayout.CENTER);
 
-        // 4. The Submit Button (Vibrant Blue)
+        //Submit Button
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(Color.WHITE);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 30, 0));
@@ -85,15 +85,15 @@ public class AddStudentView extends JFrame {
         buttonPanel.add(submitBtn);
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // 5. Submission Logic
+        //Submission Logic
         submitBtn.addActionListener(e -> {
-            // Basic validation
+            //Basic validation
             if (fNameField.getText().isEmpty() || lNameField.getText().isEmpty() || regNoField.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please fill in all required fields.", "Validation Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // Create a new Student object (personId is 0 initially, DB will auto-generate it)
+            // Creates a new Student object (personId is 0 initially, DB will auto-generate it)
             Student newStudent = new Student(
                     0,
                     fNameField.getText().trim(),
@@ -105,9 +105,9 @@ public class AddStudentView extends JFrame {
             );
 
             studentDAO.saveStudent(newStudent);
-            JOptionPane.showMessageDialog(this, "✅ Student Registered Successfully!");
+            JOptionPane.showMessageDialog(this, "Student Registered Successfully!");
 
-            // Clear fields after saving
+            // Clears fields after saving
             fNameField.setText(""); lNameField.setText(""); emailField.setText("");
             phoneField.setText(""); regNoField.setText("");
         });
