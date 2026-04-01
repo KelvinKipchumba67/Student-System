@@ -56,7 +56,7 @@ public class AdminDashboard extends JFrame {
         add(gridPanel, BorderLayout.CENTER);
 
         //making buttons clickable
-        libraryBtn.addActionListener(e -> new LibrarySearchView().setVisible(true));
+        libraryBtn.addActionListener(e -> new LibrarySearchView(0).setVisible(true));
         studentBtn.addActionListener(e -> new StudentManagementView().setVisible(true));
         lecturerBtn.addActionListener(e -> new LecturerManagementView().setVisible(true));
         addStudentBtn.addActionListener(e -> new AddStudentView().setVisible(true));

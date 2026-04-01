@@ -16,10 +16,11 @@ public class LibrarySearchView extends JFrame {
     private JTable resultsTable;
     private DefaultTableModel tableModel;
     private LibraryDAO libraryDAO;
+    private int loggedInStudentId;
 
-    public LibrarySearchView() {
+    public LibrarySearchView(int studentId) {
         libraryDAO = new LibraryDAO();
-
+        this.loggedInStudentId = studentId;
         //Setup
         setTitle("University System - Digital Library Search");
         setSize(800, 550);
@@ -28,7 +29,6 @@ public class LibrarySearchView extends JFrame {
         setLayout(new BorderLayout());
         getContentPane().setBackground(Color.WHITE); // Pure white background
 
-        //Setup
         JPanel topPanel = new JPanel(new BorderLayout(15, 0));
         topPanel.setBackground(Color.decode("#1A365D")); // Deep University Blue
         topPanel.setBorder(BorderFactory.createEmptyBorder(25, 30, 25, 30));
@@ -65,6 +65,9 @@ public class LibrarySearchView extends JFrame {
         header.setBackground(Color.decode("#F8FAFC"));
         header.setPreferredSize(new Dimension(100, 45));
 
+        JButton borrowBtn = new JButton("Borrow Selected");
+        JButton reserveBtn = new JButton("Reserve Selected");
+
 
 
         JScrollPane scrollPane = new JScrollPane(resultsTable);
@@ -72,11 +75,81 @@ public class LibrarySearchView extends JFrame {
         scrollPane.getViewport().setBackground(Color.WHITE);
         add(scrollPane, BorderLayout.CENTER);
 
+
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 15));
+        bottomPanel.setBackground(Color.WHITE);
+
+        borrowBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        borrowBtn.setBackground(Color.decode("#8B5CF6")); // Purple accent
+        borrowBtn.setForeground(Color.WHITE);
+        borrowBtn.setFocusPainted(false);
+        borrowBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        reserveBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        reserveBtn.setBackground(Color.decode("#10B981")); // Green accent
+        reserveBtn.setForeground(Color.WHITE);
+        reserveBtn.setFocusPainted(false);
+        reserveBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        bottomPanel.add(reserveBtn);
+        bottomPanel.add(borrowBtn);
+
+        add(bottomPanel, BorderLayout.SOUTH);
+
+        resultsTable.setEnabled(true);
+
         //Search-As-You-Type listener logic
         searchField.getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { triggerSearch(); }
             public void removeUpdate(DocumentEvent e) { triggerSearch(); }
             public void changedUpdate(DocumentEvent e) { triggerSearch(); }
+        });
+
+        borrowBtn.addActionListener(e -> {
+            int row = resultsTable.getSelectedRow();
+
+            if (row != -1) {
+                int availableCopies = (int) tableModel.getValueAt(row, 2);
+                if (availableCopies <= 0) {
+                    JOptionPane.showMessageDialog(this,
+                            "There are no copies currently available to borrow. Please use the 'Reserve' button to join the waitlist.",
+                            "Out of Stock",
+                            JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                String isnn = (String) tableModel.getValueAt(row, 0);
+                LibraryDAO libraryDAO = new LibraryDAO();
+
+                if (libraryDAO.recordTransaction(loggedInStudentId, isnn, "Borrow")) {
+                    JOptionPane.showMessageDialog(this, "Book Borrowed Successfully!");
+                    triggerSearch(); // Refresh the table so the count goes down
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Please select a book from the table first.");
+            }
+        });
+
+        reserveBtn.addActionListener(e -> {
+            int row = resultsTable.getSelectedRow();
+
+            if (row != -1) {
+                String isnn = (String) tableModel.getValueAt(row, 0);
+
+                LibraryDAO libraryDAO = new LibraryDAO();
+
+                // 3. Send "Reserve" to our unified transaction method!
+                if (libraryDAO.recordTransaction(loggedInStudentId, isnn, "Reserve")) {
+                    JOptionPane.showMessageDialog(this,
+                            "Book Reserved Successfully! You are now on the waitlist.",
+                            "Reservation Confirmed",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Please select a book from the table first.",
+                        "No Book Selected",
+                        JOptionPane.WARNING_MESSAGE);
+            }
         });
 
         //Loads all books initially

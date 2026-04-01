@@ -9,9 +9,10 @@ import java.awt.*;
 public class StudentDashboard extends JFrame {
 
     private String loggedInRegNo;
+    private int studentId;
 
-    public StudentDashboard(String studentRegNo) {
-        this.loggedInRegNo = studentRegNo;
+    public StudentDashboard(int studentId) {
+        this.studentId = studentId;
 
         //Setup
         setTitle("University - Student Portal");
@@ -52,7 +53,7 @@ public class StudentDashboard extends JFrame {
         add(cardPanel, BorderLayout.CENTER);
 
         //actions
-        libraryBtn.addActionListener(e -> new LibrarySearchView().setVisible(true));
+        libraryBtn.addActionListener(e -> new LibrarySearchView(studentId).setVisible(true));
 
         transcriptBtn.addActionListener(e -> {
             StudentDatabaseDAO dao = new StudentDatabaseDAO();

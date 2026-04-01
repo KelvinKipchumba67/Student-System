@@ -6,9 +6,10 @@ import java.awt.*;
 public class LecturerDashboard extends JFrame {
 
     private String loggedInStaff;
+    private int lecturerId;
 
-    public LecturerDashboard(String staffUsername) {
-        this.loggedInStaff = staffUsername;
+    public LecturerDashboard(int lecturerId) {
+        this.lecturerId = lecturerId;
 
         //Setup
         setTitle("University - Lecturer Portal");
@@ -58,7 +59,7 @@ public class LecturerDashboard extends JFrame {
         //making the buttons clickable
         manageStudentBtn.addActionListener(e -> new StudentManagementView().setVisible(true));
         addMarksBtn.addActionListener(e -> new AddMarksView().setVisible(true));
-        libraryBtn.addActionListener(e -> new LibrarySearchView().setVisible(true));
+        libraryBtn.addActionListener(e -> new LibrarySearchView(lecturerId).setVisible(true));
     }
 
     private JButton createTileButton(String text, String icon, String topBorderHexColor) {

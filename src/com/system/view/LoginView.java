@@ -105,28 +105,27 @@ public class LoginView extends JFrame {
             String username = usernameField.getText().trim();
             String password = new String(passwordField.getPassword());
 
-            if (username.isEmpty() || password.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please enter both username and password.", "Required Fields", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
+            Object[] authData = userDAO.authenticateUser(username, password);
 
-            // Asks the database to verify the user
-            String role = userDAO.authenticateUser(username, password);
+            if (authData != null) {
+                String role = (String) authData[0];
+                int user_id = (int) authData[1];
 
-            if (role.equals("Admin")) {
-                JOptionPane.showMessageDialog(null, "Welcome, System Administrator.");
-                new AdminDashboard().setVisible(true);
+                if (role.equals("Admin")) {
+                    new AdminDashboard().setVisible(true);
+                    dispose();
+                }
+                else if (role.equals("Lecturer")) {
+                    new LecturerDashboard(user_id).setVisible(true);
+                    dispose();
+                }
+                else if (role.equals("Student")) {
+                    new StudentDashboard(user_id).setVisible(true);
+                    dispose();
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Invalid Credentials", "Login Failed", JOptionPane.ERROR_MESSAGE);
             }
-            else if (role.equals("Lecturer")) {
-                JOptionPane.showMessageDialog(null, "Welcome, Lecturer.");
-                new LecturerDashboard(username).setVisible(true);
-            }
-            else if (role.equals("Student")) {
-                JOptionPane.showMessageDialog(null, "Welcome, Student.");
-                new StudentDashboard(username).setVisible(true);
-            }
-
-
         });
     }
 }
