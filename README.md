@@ -36,6 +36,10 @@ Follow these instructions to set up and run the project on your local machine.
 1. Open MySQL Workbench.
 2. Create a new schema named `university_db` (or a name of your choice).
 3. Run the following SQL script to generate the required tables:
+### Test Credentials
+1. Admin ( username-admin, password-admin123)
+2. Lecturer (username-staff123, password-pass123)
+3. Student (username-EB1/74402/24, password-student123)
 
 ```sql
 CREATE TABLE Person (
@@ -86,6 +90,12 @@ CREATE TABLE Lecturer_Course (
     PRIMARY KEY (staff_number, course_code),
     FOREIGN KEY (staff_number) REFERENCES Lecturer(Staff_number),
     FOREIGN KEY (course_code) REFERENCES Course(course_code)
+);
+CREATE TABLE System_Users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL, 
+    password VARCHAR(100) NOT NULL,      
+    role VARCHAR(20) NOT NULL             
 );
 ```
 ## 3. Secure Configuration (Important)
