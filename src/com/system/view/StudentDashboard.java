@@ -11,8 +11,9 @@ public class StudentDashboard extends JFrame {
     private String loggedInRegNo;
     private int studentId;
 
-    public StudentDashboard(int studentId) {
+    public StudentDashboard(int studentId, String username) {
         this.studentId = studentId;
+        this.loggedInRegNo = username;
 
         //Setup
         setTitle("University - Student Portal");
