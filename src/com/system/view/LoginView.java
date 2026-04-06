@@ -116,11 +116,11 @@ public class LoginView extends JFrame {
                     dispose();
                 }
                 else if (role.equals("Lecturer")) {
-                    new LecturerDashboard(user_id).setVisible(true);
+                    new LecturerDashboard(user_id, username).setVisible(true);
                     dispose();
                 }
                 else if (role.equals("Student")) {
-                    new StudentDashboard(user_id).setVisible(true);
+                    new StudentDashboard(user_id, username).setVisible(true);
                     dispose();
                 }
             } else {
