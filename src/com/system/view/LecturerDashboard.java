@@ -8,8 +8,10 @@ public class LecturerDashboard extends JFrame {
     private String loggedInStaff;
     private int lecturerId;
 
-    public LecturerDashboard(int lecturerId) {
+
+    public LecturerDashboard(int lecturerId, String username) {
         this.lecturerId = lecturerId;
+        this.loggedInStaff = username;
 
         //Setup
         setTitle("University - Lecturer Portal");
