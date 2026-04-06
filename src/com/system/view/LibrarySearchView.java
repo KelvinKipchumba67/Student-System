@@ -136,8 +136,6 @@ public class LibrarySearchView extends JFrame {
                 String isnn = (String) tableModel.getValueAt(row, 0);
 
                 LibraryDAO libraryDAO = new LibraryDAO();
-
-                // 3. Send "Reserve" to our unified transaction method!
                 if (libraryDAO.recordTransaction(loggedInStudentId, isnn, "Reserve")) {
                     JOptionPane.showMessageDialog(this,
                             "Book Reserved Successfully! You are now on the waitlist.",
